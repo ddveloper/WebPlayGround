@@ -1,27 +1,45 @@
-// Import the React and ReactDOM libraries
 import React from "react";
 import ReactDOM from "react-dom";
+import CommentDetail from "./CommentDetail";
+import faker from "faker";
+import ApprovalCard from "./ApprovalCard";
 
-// const React = require('react'); // another way
-/*  ES2015 Modules - import
-    CommonJS Modules - require
-*/
-
-// Create a react component
 const App = () => {
-  const buttonText = "Click Me!";
   return (
-    <div>
-      <label className="label" htmlFor="name">
-        Enter name:
-      </label>
-      <input id="name" type="text" />
-      <button style={{ backgroundColor: "blue", color: "white" }}>
-        {buttonText}
-      </button>
+    <div className="ui container comments">
+      <ApprovalCard>
+        <div>
+          <h4>Warning!</h4>
+          Are you sure you want to delete?
+        </div>
+      </ApprovalCard>
+
+      <ApprovalCard>
+        <CommentDetail
+          author="Sam"
+          time="10:00 PM"
+          image={faker.image.avatar()}
+          comment="comment from Sam"
+        />
+      </ApprovalCard>
+      <ApprovalCard>
+        <CommentDetail
+          author="Alex"
+          time="10:03 PM"
+          image={faker.image.avatar()}
+          comment="comment from Alex"
+        />
+      </ApprovalCard>
+      <ApprovalCard>
+        <CommentDetail
+          author="Jane"
+          time="10:05 PM"
+          image={faker.image.avatar()}
+          comment="comment from Jane"
+        />
+      </ApprovalCard>
     </div>
   );
 };
 
-// Take the react component and show it on the screen
 ReactDOM.render(<App />, document.querySelector("#root"));
