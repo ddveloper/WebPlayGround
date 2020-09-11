@@ -1,0 +1,44 @@
+import React from "react";
+import unsplash from "../api/unsplash";
+import SearchBar from "./SearchBar";
+import ImageList from "./ImageList";
+
+class App extends React.Component {
+  state = { images: [] };
+
+  //   // promise based way of handling async request
+  //   onSearchSubmit(term) {
+  //     axios
+  //       .get("https://api.unsplash.com/search/photos", {
+  //         params: { query: term },
+  //         headers: {
+  //           Authorization:
+  //             "Client-ID 3ejfPz5pxpXyCYnC8CvhnXQF0WbtH39NMcno-pG3YBE",
+  //         },
+  //       })
+  //       .then((response) => {
+  //         // a callback when get returns
+  //         console.log(response.data.results);
+  //       });
+  //   }
+
+  onSearchSubmit = async (term) => {
+    const response = await unsplash.get("/search/photos", {
+      params: { query: term },
+    });
+
+    //console.log(response.data.results);
+    this.setState({ images: response.data.results });
+  };
+
+  render() {
+    return (
+      <div className="ui container" style={{ marginTop: "10px" }}>
+        <SearchBar onSubmit={this.onSearchSubmit} />
+        <ImageList images={this.state.images} />
+      </div>
+    );
+  }
+}
+
+export default App;
