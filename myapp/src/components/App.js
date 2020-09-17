@@ -1,41 +1,50 @@
 import React from "react";
-import unsplash from "../api/unsplash";
-import SearchBar from "./SearchBar";
-import ImageList from "./ImageList";
+import SearchBar from "./SearchBarVideo";
+import youtube from "../api/youtube";
+import VideoList from "./VIdeoList";
+import VideoDetail from "./VideoDetail";
 
 class App extends React.Component {
-  state = { images: [] };
+  state = { videos: [], selectedVideo: null };
 
-  //   // promise based way of handling async request
-  //   onSearchSubmit(term) {
-  //     axios
-  //       .get("https://api.unsplash.com/search/photos", {
-  //         params: { query: term },
-  //         headers: {
-  //           Authorization:
-  //             "Client-ID 3ejfPz5pxpXyCYnC8CvhnXQF0WbtH39NMcno-pG3YBE",
-  //         },
-  //       })
-  //       .then((response) => {
-  //         // a callback when get returns
-  //         console.log(response.data.results);
-  //       });
-  //   }
+  componentDidMount() {
+    this.onTermSubmit("cars");
+  }
 
-  onSearchSubmit = async (term) => {
-    const response = await unsplash.get("/search/photos", {
-      params: { query: term },
+  onTermSubmit = async (term) => {
+    const response = await youtube.get("/search", {
+      params: {
+        q: term,
+      },
     });
 
-    //console.log(response.data.results);
-    this.setState({ images: response.data.results });
+    this.setState({
+      selectedVideo: response.data.items[0],
+      videos: response.data.items,
+    });
+  };
+
+  onVideoSelect = (video) => {
+    this.setState({ selectedVideo: video });
   };
 
   render() {
     return (
-      <div className="ui container" style={{ marginTop: "10px" }}>
-        <SearchBar onSubmit={this.onSearchSubmit} />
-        <ImageList images={this.state.images} />
+      <div className="ui container">
+        <SearchBar onFormSubmit={this.onTermSubmit} />I have{" "}
+        <div className="ui grid">
+          <div className="ui row">
+            <div className="eleven wide column">
+              <VideoDetail video={this.state.selectedVideo} />
+            </div>
+            <div className="five wide column">
+              <VideoList
+                onVideoSelect={this.onVideoSelect}
+                videos={this.state.videos}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
