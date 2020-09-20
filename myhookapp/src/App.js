@@ -1,5 +1,6 @@
 import React from "react";
 import Accordion from "./component/Accordion";
+import Search from "./component/Search";
 
 const items = [
   {
@@ -17,5 +18,6 @@ const items = [
 ];
 
 export default () => {
+  return <Search />;
   return <Accordion items={items} />;
 };
