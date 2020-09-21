@@ -3,10 +3,20 @@ import axios from "axios";
 
 const Search = () => {
   const [term, setTerm] = useState("computer science");
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    // method 1
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [term]);
+
+  useEffect(() => {
     const searchWiki = async () => {
       const { data } = await axios.get("https://en.wikipedia.org/w/api.php", {
         params: {
@@ -14,11 +24,12 @@ const Search = () => {
           list: "search",
           origin: "*",
           format: "json",
-          srsearch: term,
+          srsearch: debouncedTerm,
         },
       });
       setResults(data.query.search);
     };
+    searchWiki();
 
     // method 2
     // (async () => {
@@ -30,23 +41,7 @@ const Search = () => {
     // .then((response) => {
     //     console.log(response.data);
     // });
-
-    if (term && !results.length) {
-      searchWiki();
-    } else {
-      const timeoutId = setTimeout(() => {
-        if (term) {
-          searchWiki();
-        } else {
-          setResults([]);
-        }
-      }, 1000);
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [term]);
+  }, [debouncedTerm]);
 
   // <span dangerouslySetInnerHTML={{ __html: result.snippet }} />
   const renderedResults = results.map((result) => {
